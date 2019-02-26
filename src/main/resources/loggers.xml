@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="consoleEventLogger" class="Main.ConsoleEventLogger"/>
+
+    <!--With this bean will be called init method, which check some data. Method can't receive arguments, has any access modifier, can return smth or throw Exception-->
+    <bean id="fileEventLogger" scope="singleton" class="Main.FileEventLogger" init-method="init">
+        <constructor-arg type="java.lang.String" value = "D:\\ip.txt"/>
+    </bean>
+
+    <bean id="cacheFileEventLogger" class="Main.CacheFileEventLogger" scope="singleton" depends-on="fileEventLogger" init-method="init" destroy-method="destroy">
+        <constructor-arg type = "java.lang.Integer" value="3"/>
+    </bean>
+
+    <bean id="combinedEventLogger" class="Main.CombinedEventLogger" scope="singleton">
+        <constructor-arg>
+            <list>
+                <ref bean="fileEventLogger"/>
+                <ref bean="consoleEventLogger"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+</beans>
